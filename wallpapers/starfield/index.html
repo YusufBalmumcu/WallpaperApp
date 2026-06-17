@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Starfield</title>
+<style>html,body{margin:0;height:100%;background:#000;overflow:hidden}canvas{display:block}</style>
+</head><body><canvas id="c"></canvas>
+<script>
+const c = document.getElementById('c'), x = c.getContext('2d');
+let W, H;
+function resize(){ W = c.width = innerWidth; H = c.height = innerHeight; }
+addEventListener('resize', resize); resize();
+
+const N = 700, stars = [];
+for (let i = 0; i < N; i++) stars.push({ x: Math.random()*2-1, y: Math.random()*2-1, z: Math.random() });
+
+function frame(){
+  x.fillStyle = 'rgba(0,0,3,0.35)';
+  x.fillRect(0, 0, W, H);
+  const cx = W/2, cy = H/2;
+  for (const s of stars){
+    s.z -= 0.002;
+    if (s.z <= 0){ s.x = Math.random()*2-1; s.y = Math.random()*2-1; s.z = 1; }
+    const k = 140 / s.z;
+    const px = cx + s.x * k, py = cy + s.y * k;
+    if (px < 0 || px >= W || py < 0 || py >= H) continue;
+    const size = (1 - s.z) * 3.2;
+    x.fillStyle = `hsl(${205 + s.z*70}, 90%, ${60 + (1-s.z)*40}%)`;
+    x.fillRect(px, py, size, size);
+  }
+  requestAnimationFrame(frame);
+}
+frame();
+</script></body></html>

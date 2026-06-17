@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Aurora</title>
+<style>html,body{margin:0;height:100%;overflow:hidden;background:#05060d}canvas{display:block}</style>
+</head><body><canvas id="c"></canvas>
+<script>
+const c = document.getElementById('c'), x = c.getContext('2d');
+let W, H, t = 0;
+function resize(){ W = c.width = innerWidth; H = c.height = innerHeight; }
+addEventListener('resize', resize); resize();
+
+const blobs = [
+  { hue: 150, r: 0.55 }, { hue: 280, r: 0.5 }, { hue: 190, r: 0.6 }, { hue: 320, r: 0.45 },
+];
+
+function frame(){
+  t += 0.0025;
+  x.fillStyle = '#05060d'; x.fillRect(0, 0, W, H);
+  x.globalCompositeOperation = 'lighter';
+  blobs.forEach((b, i) => {
+    const cx = W * (0.5 + 0.35 * Math.sin(t * (0.5 + i*0.13) + i));
+    const cy = H * (0.45 + 0.3 * Math.cos(t * (0.4 + i*0.17) + i*2));
+    const rad = Math.min(W, H) * b.r;
+    const g = x.createRadialGradient(cx, cy, 0, cx, cy, rad);
+    g.addColorStop(0, `hsla(${b.hue + Math.sin(t)*20}, 85%, 60%, 0.5)`);
+    g.addColorStop(1, 'hsla(0,0%,0%,0)');
+    x.fillStyle = g;
+    x.fillRect(0, 0, W, H);
+  });
+  x.globalCompositeOperation = 'source-over';
+  requestAnimationFrame(frame);
+}
+frame();
+</script></body></html>

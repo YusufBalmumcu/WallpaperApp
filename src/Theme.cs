@@ -13,6 +13,7 @@ internal static class Theme
     public static readonly Color SubText  = Color.FromArgb(146, 152, 166);
     public static readonly Color Accent   = Color.FromArgb(91, 124, 250);
     public static readonly Color AccentHi = Color.FromArgb(118, 146, 252);
+    public static readonly Color Border   = Color.FromArgb(58, 62, 76);
     public static readonly Color Danger   = Color.FromArgb(224, 90, 92);
     public static readonly Color DangerHi = Color.FromArgb(80, 42, 46);
 

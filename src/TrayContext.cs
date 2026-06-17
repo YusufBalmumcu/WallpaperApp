@@ -7,6 +7,7 @@ internal sealed class TrayContext : ApplicationContext
 {
     private readonly AppSettings _settings;
     private readonly WallpaperManager _mgr = new();
+    private readonly WallpaperLibrary _library = new();
     private readonly ControlForm _form;
     private readonly NotifyIcon _tray;
     private readonly ToolStripMenuItem _pauseItem;
@@ -15,7 +16,8 @@ internal sealed class TrayContext : ApplicationContext
     {
         _settings = settings;
         _mgr.PrimaryOnly = settings.PrimaryOnly;
-        _form = new ControlForm(_mgr, settings);
+        _library.EnsureSeeded();
+        _form = new ControlForm(_mgr, settings, _library);
 
         _pauseItem = new ToolStripMenuItem("Pause", null, (_, _) => TogglePause());
 
@@ -55,7 +57,6 @@ internal sealed class TrayContext : ApplicationContext
         {
             _mgr.SetWallpaper(source);
             _settings.LastSource = source;
-            _settings.AddRecent(source);
             _settings.Save();
             _form.Sync();
         }

@@ -6,11 +6,8 @@ namespace WallpaperApp;
 internal sealed class AppSettings
 {
     public string? LastSource { get; set; }
-    public List<string> Recents { get; set; } = new();
     public bool PrimaryOnly { get; set; }
     public bool ReapplyOnLaunch { get; set; } = true;
-
-    private const int MaxRecents = 12;
 
     private static string Dir =>
         Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "WallpaperApp");
@@ -35,12 +32,5 @@ internal sealed class AppSettings
             File.WriteAllText(FilePath, JsonSerializer.Serialize(this, new JsonSerializerOptions { WriteIndented = true }));
         }
         catch { /* best effort */ }
-    }
-
-    public void AddRecent(string source)
-    {
-        Recents.RemoveAll(r => string.Equals(r, source, StringComparison.OrdinalIgnoreCase));
-        Recents.Insert(0, source);
-        if (Recents.Count > MaxRecents) Recents.RemoveRange(MaxRecents, Recents.Count - MaxRecents);
     }
 }

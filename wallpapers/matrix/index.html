@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Matrix Rain</title>
+<style>html,body{margin:0;height:100%;overflow:hidden;background:#000}canvas{display:block}</style>
+</head><body><canvas id="c"></canvas>
+<script>
+const c = document.getElementById('c'), x = c.getContext('2d');
+let W, H, cols, drops, fontSize = 16;
+const glyphs = 'ｱｲｳｴｵｶｷｸｹｺｻｼｽ0123456789ABCDEF<>*/'.split('');
+function resize(){
+  W = c.width = innerWidth; H = c.height = innerHeight;
+  cols = Math.floor(W / fontSize);
+  drops = new Array(cols).fill(0).map(() => Math.random() * -H / fontSize);
+}
+addEventListener('resize', resize); resize();
+
+function frame(){
+  x.fillStyle = 'rgba(0,0,0,0.08)';
+  x.fillRect(0, 0, W, H);
+  x.font = fontSize + 'px monospace';
+  for (let i = 0; i < cols; i++){
+    const ch = glyphs[(Math.random() * glyphs.length) | 0];
+    const y = drops[i] * fontSize;
+    x.fillStyle = '#cfffe0';
+    x.fillText(ch, i * fontSize, y);              // bright leading char
+    x.fillStyle = 'rgba(0,255,120,0.85)';
+    x.fillText(glyphs[(Math.random()*glyphs.length)|0], i * fontSize, y - fontSize);
+    if (y > H && Math.random() > 0.975) drops[i] = 0;
+    drops[i] += 0.25;
+  }
+  requestAnimationFrame(frame);
+}
+frame();
+</script></body></html>
