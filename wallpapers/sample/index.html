@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>WallpaperApp sample</title>
+<style>
+  html, body { margin: 0; height: 100%; overflow: hidden; background: #06070d; }
+  canvas { display: block; }
+  .label {
+    position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%);
+    font: 600 4vw/1.2 "Segoe UI", system-ui, sans-serif; color: #fff;
+    text-align: center; text-shadow: 0 2px 30px rgba(0,0,0,.6); letter-spacing: .02em;
+    pointer-events: none;
+  }
+  .label small { display:block; font-size: 1.6vw; opacity:.75; margin-top:.6em; font-weight:400; }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div class="label">WallpaperApp<small>live HTML / CSS / JS wallpaper — WebView2</small></div>
+<script>
+const c = document.getElementById('c'), x = c.getContext('2d');
+let W, H, t = 0;
+function resize() { W = c.width = innerWidth; H = c.height = innerHeight; }
+addEventListener('resize', resize); resize();
+
+const N = 90, pts = [];
+for (let i = 0; i < N; i++)
+  pts.push({ x: Math.random()*W, y: Math.random()*H,
+             vx: (Math.random()-.5)*.6, vy: (Math.random()-.5)*.6 });
+
+function frame() {
+  t += 0.005;
+  // animated gradient background
+  const g = x.createLinearGradient(0, 0, W, H);
+  const a = (Math.sin(t) * 0.5 + 0.5);
+  g.addColorStop(0, `hsl(${(t*40) % 360}, 70%, ${8 + a*6}%)`);
+  g.addColorStop(1, `hsl(${(t*40 + 120) % 360}, 75%, ${10 + (1-a)*8}%)`);
+  x.fillStyle = g; x.fillRect(0, 0, W, H);
+
+  // drifting particles + links
+  for (const p of pts) {
+    p.x += p.vx; p.y += p.vy;
+    if (p.x < 0 || p.x > W) p.vx *= -1;
+    if (p.y < 0 || p.y > H) p.vy *= -1;
+  }
+  for (let i = 0; i < N; i++) {
+    for (let j = i + 1; j < N; j++) {
+      const dx = pts[i].x - pts[j].x, dy = pts[i].y - pts[j].y;
+      const d = Math.hypot(dx, dy);
+      if (d < 140) {
+        x.strokeStyle = `rgba(120,180,255,${(1 - d/140) * 0.25})`;
+        x.beginPath(); x.moveTo(pts[i].x, pts[i].y); x.lineTo(pts[j].x, pts[j].y); x.stroke();
+      }
+    }
+  }
+  x.fillStyle = '#9fd0ff';
+  for (const p of pts) { x.beginPath(); x.arc(p.x, p.y, 2, 0, 7); x.fill(); }
+
+  requestAnimationFrame(frame);
+}
+frame();
+</script>
+</body>
+</html>

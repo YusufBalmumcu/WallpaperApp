@@ -205,3 +205,13 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+.prev_wallpaper
+
+*.exe
+
+# .NET build output
+[Bb]in/
+[Oo]bj/
+*.user
+# WebView2 runtime data created next to the exe
+webview2-data/
