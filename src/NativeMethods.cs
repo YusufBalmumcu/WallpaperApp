@@ -32,6 +32,11 @@ internal static class NativeMethods
     [DllImport("user32.dll")]
     public static extern bool GetWindowRect(IntPtr hWnd, out RECT r);
 
+    [DllImport("dwmapi.dll")]
+    public static extern int DwmSetWindowAttribute(IntPtr hwnd, int attr, ref int value, int size);
+
+    public const int DWMWA_USE_IMMERSIVE_DARK_MODE = 20; // dark title bar (Win10 2004+/Win11)
+
     [StructLayout(LayoutKind.Sequential)]
     public struct RECT { public int left, top, right, bottom; }
 

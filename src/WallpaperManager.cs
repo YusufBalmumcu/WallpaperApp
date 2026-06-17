@@ -10,6 +10,7 @@ internal sealed class WallpaperManager
     public string? CurrentSource { get; private set; }
     public bool PrimaryOnly { get; set; }
     public bool IsRunning => _windows.Count > 0;
+    public bool IsPaused { get; private set; }
 
     /// <summary>Apply a wallpaper source (html / video / image / url) to the monitors.</summary>
     public void SetWallpaper(string source)
@@ -26,6 +27,23 @@ internal sealed class WallpaperManager
             win.Show();
         }
         CurrentSource = source;
+        IsPaused = false;
+    }
+
+    /// <summary>Hide the wallpaper (reveals the normal desktop) without tearing it down.</summary>
+    public void Pause()
+    {
+        if (!IsRunning || IsPaused) return;
+        foreach (var win in _windows) win.Hide();
+        IsPaused = true;
+    }
+
+    /// <summary>Show the wallpaper again after a Pause.</summary>
+    public void Resume()
+    {
+        if (!IsRunning || !IsPaused) return;
+        foreach (var win in _windows) win.Show();
+        IsPaused = false;
     }
 
     /// <summary>Tear down all wallpaper windows and restore the normal desktop.</summary>
@@ -38,5 +56,6 @@ internal sealed class WallpaperManager
         }
         _windows.Clear();
         CurrentSource = null;
+        IsPaused = false;
     }
 }
