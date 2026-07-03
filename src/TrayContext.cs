@@ -36,7 +36,7 @@ internal sealed class TrayContext : ApplicationContext
 
         _tray = new NotifyIcon
         {
-            Icon = SystemIcons.Application,
+            Icon = AppArt.Icon,
             Text = "WallpaperApp",
             Visible = true,
             ContextMenuStrip = menu

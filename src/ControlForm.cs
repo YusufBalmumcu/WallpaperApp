@@ -25,6 +25,7 @@ internal sealed class ControlForm : Form
         _settings = settings;
 
         Text = "WallpaperApp";
+        Icon = AppArt.Icon;
         FormBorderStyle = FormBorderStyle.Sizable;
         MaximizeBox = true;
         MinimumSize = new Size(540, 560);
